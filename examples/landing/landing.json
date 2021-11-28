@@ -1,9 +1,8 @@
 {
-  "main": [
-    "header" 
-  ],
-  "header": [
-    { "top_btn": "home" },
-    { "top_btn": "logout" }
-  ]
+  "main": {
+    "header": [
+        { "top_btn": "home" },
+        { "top_btn": "logout" }
+    ]
+  }
 }
