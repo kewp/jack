@@ -1,0 +1,26 @@
+{
+  "name": "json2html",
+  "version": "1.0.0",
+  "description": "Split your static website into separate components",
+  "main": "json2html.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kewp/json2html.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kewp/json2html/issues"
+  },
+  "homepage": "https://github.com/kewp/json2html#readme",
+  "dependencies": {
+    "yargs": "^17.2.1"
+  }
+}
