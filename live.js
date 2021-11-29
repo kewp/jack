@@ -3,7 +3,6 @@ const readline = require('readline');
 const fs = require('fs');
 const http = require('http');
 
-let root = './examples/landing';
 let file = './examples/landing/landing.json';
 let temp = './examples/landing';
 let outf = './tmp/index.html';
@@ -19,8 +18,11 @@ let live = `
 
 let str = ''; // sent to server
 let run = () => {
-    try { str = require('./json2html').get_file_str(file,temp); }
-    catch (err) { console.log(`could not run json2html: ${err}`); return; }
+    
+    console.log();
+
+    try { str = require('./jack').get_file_str(file,temp); }
+    catch (err) { console.log(`could not run jack: ${err}`); return; }
     
     // insert live reload script
     if (str.indexOf('</body>')>-1) str = str.replace('</body>',live+'</body>');
@@ -39,11 +41,11 @@ let timestamp = () => {
 }
 
 // One-liner for current directory
-chokidar.watch(['./json2html.js',root]).on('all', (event, path) => {
+chokidar.watch(['./jack.js',temp]).on('all', (event, path) => {
         console.log(timestamp(), event, path);
         if (event != 'add' && event != 'addDir')
         {
-            if (path=='json2html.js') delete require.cache[require.resolve('./json2html')];
+            if (path=='jack.js') delete require.cache[require.resolve('./jack')];
             run();
         }
         readline.cursorTo(process.stdout, 0);

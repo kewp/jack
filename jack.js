@@ -10,7 +10,6 @@ function fail(str) { throw new Error(str); /* process.exit(1); */ }
 
 function get_str(name, temp, obj)
 {
-    console.trace('temp',temp);
     let ret = readFileSync(path.join(temp, name)+'.html');
 
     if (ret.indexOf('{slot}') == -1)
@@ -23,24 +22,38 @@ function get_str(name, temp, obj)
     return ret;
 }
 
-
-function get_str(obj, temp, outp)
+function get_temp(name,temp)
 {
-    let str = 'hellos';
+    let t; try { t = readFileSync(path.join(temp, name)+'.html'); }
+    catch (err) { throw new Error(`could not get template ${name}`); }
+    return t.toString();
+}
 
-    if (is_object(obj))
-    {
-        Object.keys(obj).forEach(name => {
-
-        })
-
-    }
-    else if (is_array(obj))
-    {
-    }
-    else throw new Error('bad type: '+typestr(obj));
-
+function get_arr_str(obj, temp)
+{
+    let str = '';
+    obj.forEach(sub => { str += get_str(sub,temp); });
     return str;
+}
+
+function get_obj_str(obj, temp)
+{
+    let str = '';
+    Object.keys(obj).forEach(name => {
+        let t = get_temp(name,temp);
+        if (t.indexOf('{slot}')==-1) throw new Error(`no {slot} in ${name}.html`);
+        let o = get_str(obj[name],temp);
+        str += t.replace('{slot}',o);
+    });
+    return str;
+}
+
+function get_str(obj, temp)
+{
+    if (is_object(obj)) return get_obj_str(obj,temp);
+    else if (is_array(obj)) return get_arr_str(obj,temp);
+    else if (is_string(obj)) return obj;
+    else throw new Error('bad type: '+typestr(obj));
 }
 
 //     if (!is_object(obj)) console.log('root json must be an object');
@@ -63,7 +76,7 @@ function get_str(obj, temp, outp)
 //     }
 // }
 
-function get_file_str(file, tmp)
+function get_file_str(file, temp)
 {
     let data;
     try { data = readFileSync(file); }
@@ -74,7 +87,7 @@ function get_file_str(file, tmp)
     catch (err) { console.log('could not parse json'); console.log(err.stack); return ''; }
     
     let str;
-    try { str = get_str(obj); }
+    try { str = get_str(obj, temp); }
     catch (err) { console.log('could not get json string'); console.log(err.stack); return ''; }
 
     return str;
