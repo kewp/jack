@@ -1,8 +1,7 @@
 # jack
 
-`jack` produces an HTML file/string from a
-JSON file and several HTML templates. the JSON
-might look like this:
+`jack` produces HTML from a JSON template and HTML fragments.
+for example the JSON might look like:
 
 ```json
 {
@@ -17,7 +16,6 @@ might look like this:
 }
 ```
 
-here `main` wraps `header`, `body` and `footer`.
 every name is assumed to correspond to an html
 file, e.g. `main.html` and `header.html`.
 
