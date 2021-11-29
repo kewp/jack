@@ -4,39 +4,80 @@ let path = require('path');
 function typestr(obj) { return Object.prototype.toString.call(obj); }
 function is_array(obj) { return typestr(obj) == '[object Array]'; }
 function is_object(obj) { return typestr(obj) == '[object Object]'; }
+function is_string(obj) { return typestr(obj) == '[object String]'; }
 
-function fail(str) { console.log(str); process.exit(1); }
+function fail(str) { throw new Error(str); /* process.exit(1); */ }
 
 function get_str(name, temp, obj)
 {
-    let ret;
-    try {
-        ret = readFileSync(path.join(temp, name)+'.html')
-    }
-    catch (err) { fail(err); }
+    console.trace('temp',temp);
+    let ret = readFileSync(path.join(temp, name)+'.html');
+
+    if (ret.indexOf('{slot}') == -1)
+        fail(`{slot} not found in ${name}.html`);
+    if (is_string(obj)) 
+        ret = ret.replace('{slot}',obj);
+    else
+        ret = ret.replace('{slot}',get_str(obj));
+
     return ret;
 }
 
-function go_root_json(obj, temp, outp)
+
+function get_str(obj, temp, outp)
 {
-    if (!is_object(obj)) console.log('root json must be an object');
-    else {
-        let out = "";
-        let err = false;
+    let str = 'hellos';
+
+    if (is_object(obj))
+    {
         Object.keys(obj).forEach(name => {
-            let fname = path.join(temp, name)
-            if (!existsSync(`${fname}.html`))
-            {
-                console.log(`could not find ${fname}.html`)
-                err = true;
-            }
-            else
-                out += get_str(name, temp, obj[name]);
+
         })
-        if (err) return;
-        try { writeFileSync(outp, out); }
-        catch (err) { fail(err); }
+
     }
+    else if (is_array(obj))
+    {
+    }
+    else throw new Error('bad type: '+typestr(obj));
+
+    return str;
+}
+
+//     if (!is_object(obj)) console.log('root json must be an object');
+//     else {
+//         let out = "";
+//         let err = false;
+//         Object.keys(obj).forEach(name => {
+//             let fname = path.join(temp, name)
+//             if (!existsSync(`${fname}.html`))
+//             {
+//                 console.log(`could not find ${fname}.html`)
+//                 err = true;
+//             }
+//             else
+//                 out += get_str(name, temp, obj[name]);
+//         })
+//         if (err) return;
+//         try { writeFileSync(outp, out); }
+//         catch (err) { fail(err); }
+//     }
+// }
+
+function get_file_str(file, tmp)
+{
+    let data;
+    try { data = readFileSync(file); }
+    catch (err) { console.log('could not open file'); console.log(err.stack); return ''; }
+
+    let obj;
+    try { obj = JSON.parse(data); }
+    catch (err) { console.log('could not parse json'); console.log(err.stack); return ''; }
+    
+    let str;
+    try { str = get_str(obj); }
+    catch (err) { console.log('could not get json string'); console.log(err.stack); return ''; }
+
+    return str;
 }
 
 function go(file, temp, outp)
@@ -44,24 +85,31 @@ function go(file, temp, outp)
     readFile(file, 'utf8', (err, data) => {
 
         if (err) {
-            console.log(`Error reading file from disk: ${err}`);
+            console.log(`error reading file from disk: ${err}`);
         } else {
     
-            try {
-                // parse JSON string to JSON object
-                const obj = JSON.parse(data);
-                go_root_json(obj, temp, outp);
-            }
+            let obj; try { obj = JSON.parse(data); }
             catch (err) {
-                console.log(`Could not parse json: ${err}`);
+                console.log(`could not parse json`);
+                console.log(err.stack);
+                return;
             }
+            let str; try { str = get_str(obj); }
+            catch (err) {
+                console.log('could not get json string');
+                console.log(err.stack);
+                return;
+            }
+            writeFileSync(outp, str);
         }
 
     });
 }
 
-function go_check(base, file, temp, outp, rela)
+function go_check(conf)
 {
+    let { base, file, temp, outp, rela } = conf;
+
     if (!existsSync(base))
         console.log(`error: ${base} not found`);
     else {
@@ -81,22 +129,35 @@ function go_check(base, file, temp, outp, rela)
     }
 }
 
-var argv = require('yargs/yargs')(process.argv.slice(2))
-    .default('b','./')
-    .demandCommand(0,0)
-    .describe('b','Base directory')
-    .describe('t','Template directory (relative to base)')
-    .default('t','./')
-    .default('f','main.json')
-    .describe('f','Input json file (relative to base)')
-    .default('o','index.html')
-    .describe('o','Output html')
-    .boolean('O')
-    .default('O',false)
-    .describe('O','Output html relative to base')
-    .strict()
-    .argv;
+if (require.main === module) {
 
-// console.log(`running with -b ${argv.b} -f ${argv.f} -t ${argv.t} [run with --help for more]`);
+    var argv = require('yargs/yargs')(process.argv.slice(2))
+        .default('b','./')
+        .demandCommand(0,0)
+        .describe('b','base directory')
+        .describe('t','template directory (relative to root)')
+        .default('t','./')
+        .default('f','main.json')
+        .describe('f','input json file (relative to root)')
+        .default('o','index.html')
+        .describe('o','output html')
+        .boolean('O')
+        .default('O',false)
+        .describe('O','output html relative to root')
+        .strict()
+        .argv;
 
-go_check(argv.b, argv.f, argv.t, argv.o, argv.O);
+    // console.log(`running with -b ${argv.b} -f ${argv.f} -t ${argv.t} [run with --help for more]`);
+
+    let conf = {
+        base: argv.b,
+        file: argv.f,
+        temp: argv.t,
+        outp: argv.o,
+        rela: argv.O
+    };
+
+    go_check(conf);
+}
+
+module.exports = {go_check, get_file_str};

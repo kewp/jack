@@ -7,7 +7,7 @@
     "example": "examples"
   },
   "scripts": {
-    "live": "node live.js & cd examples/landing; vite",
+    "live": "node live.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,7 +22,10 @@
   },
   "homepage": "https://github.com/kewp/json2html#readme",
   "dependencies": {
-    "chokidar": "^3.5.2",
     "yargs": "^17.2.1"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.2",
+    "livereload": "^0.9.3"
   }
 }
