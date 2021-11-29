@@ -1,7 +1,8 @@
 # jack
 
-define the structure of your page with a
-json object:
+`jack` produces an HTML file/string from a
+JSON file and several HTML templates. the JSON
+might look like this:
 
 ```json
 {
@@ -16,7 +17,8 @@ json object:
 }
 ```
 
-every name is assumed to have a corresponding html
+here `main` wraps `header`, `body` and `footer`.
+every name is assumed to correspond to an html
 file, e.g. `main.html` and `header.html`.
 
 `main.html` might look like this:
@@ -37,17 +39,36 @@ file, e.g. `main.html` and `header.html`.
 ```
 
 here `{slot}` specifies where the children go.
+they are inserted in order, i.e.
 
-also `top_btn.html` takes in a variable allowing for
-customisation, e.g.
+```html
+ ...
+ <body>
+    {header will go here}
+    {body will go here}
+    {footer will go here}
+  </body>
+  ...
+```
+
+note how `top_btn` takes in a variable allowing for
+customisation. `top_btn.html` might look like
 
 ```html
 <button>{var}</button>
 ```
 
-## generate
+hopefully that makes what `jack` is clear.
 
-to execute we just run on the json:
+## why
+
+it's a simple way to split a page up into separate components.
+i don't like how cluttered pure html is and using a framework
+seems overkill for a static site.
+
+## console usage
+
+to execute on the console we use `jack.js`
 
 ```sh
 node jack.js
@@ -55,11 +76,10 @@ node jack.js
 
 it takes in a lot of options which you can see with `node jack.js --help`.
 
-## why
+## library usage
 
-it's a simple way to split a page up into separate components.
-i don't like how cluttered pure html is and using a framework
-seems overkill for a static site.
+`jack.js` exports several methods you can use to generate
+HTML strings. I still need to publish this to npm.
 
 ## live script
 
