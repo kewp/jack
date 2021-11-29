@@ -18,7 +18,7 @@ your JSON might look like
 ```
 
 each name corresponds to an HTML
-fragment, e.g. `main.html` might look like
+fragment. for example, `main.html` might look like
 
 ```html
 <!DOCTYPE html>
@@ -35,7 +35,8 @@ fragment, e.g. `main.html` might look like
 </html>
 ```
 
-here `{slot}` specifies where the children go.
+here `{slot}` specifies where to insert the
+children.
 they are inserted in order, i.e.
 
 ```html
@@ -48,14 +49,12 @@ they are inserted in order, i.e.
   ...
 ```
 
-note how `top_btn` takes in a variable allowing for
-customisation. `top_btn.html` might look like
+also note how `top_btn` takes in a variable allowing for
+customisation. for example, `top_btn.html` might look like
 
 ```html
 <button>{var}</button>
 ```
-
-hopefully that makes what `jack` is clear.
 
 ## why
 
