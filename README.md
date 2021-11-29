@@ -1,24 +1,18 @@
-# json2html
-Split your static website into separate components
+# jack
 
-## simple idea
-
-you define the structure of your page with a single
+define the structure of your page with a
 json object:
 
 ```json
 {
-  "main": [
-    "header",
-    "body",
-    "footer" 
-  ],
-  "header": [
-    { "top_btn": "home" },
-    { "top_btn": "logout" }
-  ],
-  "body": ...,
-  "footer: ...
+  "main": {
+    "header": [
+      { "top_btn": "home" },
+      { "top_btn": "logout" }
+    ],
+    "body": {},
+    "footer": {}
+  }
 }
 ```
 
@@ -37,14 +31,15 @@ file, e.g. `main.html` and `header.html`.
     <title>App</title>
   </head>
   <body>
-     {child}
+     {slot}
   </body>
 </html>
 ```
 
-note how `{child}` specifies where the children go.
+here `{slot}` specifies where the children go.
 
-more interestingly is `top_btn.html` which takes in a variable:
+also `top_btn.html` takes in a variable allowing for
+customisation, e.g.
 
 ```html
 <button>{var}</button>
@@ -55,15 +50,20 @@ more interestingly is `top_btn.html` which takes in a variable:
 to execute we just run on the json:
 
 ```sh
-node json2html.js input.json
+node jack.js
 ```
 
-by default it searches for the html files in the current directory
-and outputs to `index.html`.
+it takes in a lot of options which you can see with `node jack.js --help`.
 
 ## why
 
 it's a simple way to split a page up into separate components.
-everything in html follows the parent/child / tree paradigm.
-i don't like how cluttered pure html is and i don't like how
-complex ui libraries are. let's see if this approach has legs.
+i don't like how cluttered pure html is and using a framework
+seems overkill for a static site.
+
+## live script
+
+for my own development there is a script called _live_ run with
+`npm run live` which builds `examples/landing`, serves it via
+`localhost:8000` and watches for any changes, either to the
+`examples/landing` folder or to the library itself (`jack.js`).
