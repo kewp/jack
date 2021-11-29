@@ -1,9 +1,8 @@
 # jack
 
 `jack` produces HTML from JSON
-and HTML fragments.
-
-the JSON describes the layout
+and HTML fragments, using the JSON to
+describe the layout, e.g.
 
 ```json
 {
@@ -18,10 +17,8 @@ the JSON describes the layout
 }
 ```
 
-where each name corresponds to an HTML
-fragment.
-
-e.g. `main.html` might look like
+each name corresponds to an HTML
+fragment, e.g. `main.html` might look like
 
 ```html
 <!DOCTYPE html>
@@ -62,9 +59,9 @@ hopefully that makes what `jack` is clear.
 
 ## why
 
-i'm always frustrated that i cannot see the structure
+i want to see the structure
 of my html pages at a glance. pure html is too
-cluttered, and frameworks have too many moving parts.
+cluttered and frameworks have too many moving parts.
 
 ## console usage
 
