@@ -1,7 +1,9 @@
 # jack
 
-`jack` produces HTML from a JSON template and HTML fragments.
-for example the JSON might look like:
+`jack` produces HTML from JSON
+and HTML fragments.
+
+the JSON describes the layout
 
 ```json
 {
@@ -16,10 +18,10 @@ for example the JSON might look like:
 }
 ```
 
-every name is assumed to correspond to an html
-file, e.g. `main.html` and `header.html`.
+where each name corresponds to an HTML
+fragment.
 
-`main.html` might look like this:
+e.g. `main.html` might look like
 
 ```html
 <!DOCTYPE html>
@@ -60,9 +62,9 @@ hopefully that makes what `jack` is clear.
 
 ## why
 
-it's a simple way to split a page up into separate components.
-i don't like how cluttered pure html is and using a framework
-seems overkill for a static site.
+i'm always frustrated that i cannot see the structure
+of my html pages at a glance. pure html is too
+cluttered, and frameworks have too many moving parts.
 
 ## console usage
 
@@ -85,3 +87,9 @@ for my own development there is a script called _live_ run with
 `npm run live` which builds `examples/landing`, serves it via
 `localhost:8000` and watches for any changes, either to the
 `examples/landing` folder or to the library itself (`jack.js`).
+
+## string replace
+
+it occurs to me this library actually has nothing to do with
+html - it's really a string replacement mechanism. the templates
+could be anything.
