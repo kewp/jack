@@ -29,29 +29,32 @@ function get_temp(name,temp)
     return t.toString();
 }
 
-function get_arr_str(obj, temp)
+function get_arr_str(obj, temp, parent)
 {
     let str = '';
-    obj.forEach(sub => { str += get_str(sub,temp); });
-    return str;
-}
-
-function get_obj_str(obj, temp)
-{
-    let str = '';
-    Object.keys(obj).forEach(name => {
-        let t = get_temp(name,temp);
-        if (t.indexOf('{slot}')==-1) throw new Error(`no {slot} in ${name}.html`);
-        let o = get_str(obj[name],temp);
-        str += t.replace('{slot}',o);
+    obj.forEach(item => { 
+        str += get_str(item,temp,parent); 
     });
     return str;
 }
 
-function get_str(obj, temp)
+function get_obj_str(obj, temp, parent)
 {
-    if (is_object(obj)) return get_obj_str(obj,temp);
-    else if (is_array(obj)) return get_arr_str(obj,temp);
+    let str = '';
+    Object.keys(obj).forEach(name => {
+        let sub = parent ? parent + '_' + name : name;
+        let t = get_temp(sub,temp);
+        if (t.indexOf('{slot}')==-1) throw new Error(`no {slot} in ${name}.html`);
+        let o = get_str(obj[name],temp,sub);
+        str += t.replaceAll('{slot}',o);
+    });
+    return str;
+}
+
+function get_str(obj, temp, parent)
+{
+    if (is_object(obj)) return get_obj_str(obj,temp,parent);
+    else if (is_array(obj)) return get_arr_str(obj,temp,parent);
     else if (is_string(obj)) return obj;
     else throw new Error('bad type: '+typestr(obj));
 }

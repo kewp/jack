@@ -1,8 +1,14 @@
 {
   "main": {
-    "header": [
-        { "top_btn": "home" },
-        { "top_btn": "logout" }
-    ]
+    "header": {
+        "main": [
+          { "btn": "home" },
+          { "btn": "logout" }
+        ],
+        "mobile": [
+          { "btn": "Home" },
+          { "btn": "Logout" }
+        ]
+      }
   }
 }
