@@ -1,6 +1,8 @@
 # jack
 
-`jack` uses JSON to describe the layout of your HTML pages, e.g.
+`jack` let's you produce HTML pages using JSON to describe the structure.
+
+your JSON might look like
 
 ```json
 {
