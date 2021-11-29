@@ -1,8 +1,6 @@
 # jack
 
-`jack` produces HTML from JSON
-and HTML fragments, using the JSON to
-describe the layout, e.g.
+`jack` uses JSON to describe the layout of your HTML pages, e.g.
 
 ```json
 {
